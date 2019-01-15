@@ -1,0 +1,155 @@
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.print.*;
+
+public class Controller implements ActionListener {
+
+    private Viewer controllerViewer;
+
+
+    Controller(Viewer controllerViewer) {
+	this.controllerViewer = controllerViewer;
+    } 
+
+   
+    public void actionPerformed(ActionEvent event) {
+
+    	String textFromTextArea = controllerViewer.getTextFromTextArea();
+    	JTextArea textField = controllerViewer.getTextField();
+	String command = event.getActionCommand();
+	
+	switch(command) {
+
+		case "New Document":
+			newFile();
+			break;                                           
+		case "Open Document":
+			openFile();
+			break;
+		case "Save Document":
+			saveFile();
+			break;
+		case "Print Document":
+			PageSetup pageSetup = new PageSetup();
+			pageSetup.printerJob(textFromTextArea);
+			break;
+		case "Save As Document":
+			saveFile();
+			break;
+		case "Cut":
+			textField.cut();
+			break;
+		case "Copy":
+			textField.copy();
+			break;
+		case "Paste":
+			textField.paste();
+			break;
+		case "About Notepad":
+			JOptionPane.showMessageDialog(null, "This Notepad was created by Kadyrbek Adiev in 2018 during AUCA JAVA courses. \nHuge credits to Erkin Koshoev, who taught me the basics of JAVA programming language. \nThis Notepad was written in JAVA");
+			break;
+
+	}    	
+    }
+
+    public void newFile() {
+
+	String textFromTextArea = controllerViewer.getTextFromTextArea();
+	if(!textFromTextArea.equals("")) {
+		int option = showDialog();
+		if(option == 1) {
+			controllerViewer.setTextToTextArea("");
+		} else if(option == 0) {
+			saveToFile(textFromTextArea);
+		}
+	}	
+    }
+
+    private int showDialog() {
+
+	Object[] options = {"Save", "Don't save", "Cancel"};
+	int o = JOptionPane.showOptionDialog(new JFrame(), 
+		"Do you want to save changes?", 
+		"Notepad", 
+		JOptionPane.YES_NO_CANCEL_OPTION, 
+		JOptionPane.QUESTION_MESSAGE,
+		null,
+		options,
+		options[2]);
+	return o;
+    }
+
+
+    public void openFile() {
+
+	JFileChooser fileChooser = new JFileChooser();
+	int returnVal = fileChooser.showOpenDialog(new JFrame());
+	File file = fileChooser.getSelectedFile();
+	String fileName = file.getName();
+	String textFromFile = open(fileName);
+	controllerViewer.setTextToTextArea(textFromFile);
+	controllerViewer.setTitle(fileName);
+    }
+
+    public String open(String nameFile) {
+
+    	String textFromOpenFile = "";
+	try {
+		FileReader fileReader = new FileReader(nameFile);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String line;
+		while((line = bufferedReader.readLine()) != null) {
+			textFromOpenFile = textFromOpenFile + line + "\n";
+		}
+		bufferedReader.close();
+	} catch (IOException e) {
+		javax.swing.JOptionPane.showMessageDialog(
+		new javax.swing.JFrame(), "Warning!\n" + e);
+	}
+	return textFromOpenFile;
+    }
+
+    
+    public void saveFile() {
+
+	String textFromTextArea = controllerViewer.getTextFromTextArea();
+	saveToFile(textFromTextArea);
+    }
+
+
+    public void saveToFile(String text) {
+
+	JFileChooser fileChooser = new JFileChooser();
+	int returnVal = fileChooser.showSaveDialog(new JFrame());
+	File file = fileChooser.getSelectedFile();
+	if(returnVal == 0) {
+		saveText(file, text);
+	} 	
+    }	
+
+    public void saveText(File fileName, String text) {
+
+	try {
+		FileWriter fileWriter = new FileWriter(fileName);
+		PrintWriter printWriter = new PrintWriter(fileWriter);
+		printWriter.println(text);
+		printWriter.close();	
+	} catch(IOException e) {
+		System.out.println(e);
+	}	
+    }
+}                        
