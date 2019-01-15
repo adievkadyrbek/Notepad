@@ -1,0 +1,172 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Viewer {
+
+    private JTextArea textArea;
+    private JFrame frame;
+
+    Viewer() {
+
+	Controller controller = new Controller(this);
+
+	textArea = new JTextArea();
+	JScrollPane scroll = new JScrollPane(textArea);
+	
+		// MenuBar
+	JMenuBar menuBar = new JMenuBar();
+	JMenu file = new JMenu("File");
+	JMenu edit = new JMenu("Edit");
+	JMenu format = new JMenu("Format");
+	JMenu view = new JMenu("View");
+	JMenu help = new JMenu("Help");
+
+	menuBar.add(file);
+	menuBar.add(edit);
+	menuBar.add(format);
+	menuBar.add(view);
+	menuBar.add(help);
+	
+		// File
+	JMenuItem newMenu = new JMenuItem("New", new ImageIcon("images/new.gif"));
+	newMenu.addActionListener(controller);
+	newMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+	newMenu.setActionCommand("New Document");
+
+	JMenuItem openMenu = new JMenuItem("Open...", new ImageIcon("images/open.gif"));
+	openMenu.addActionListener(controller);
+	openMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+	openMenu.setActionCommand("Open Document");
+
+	JMenuItem saveMenu = new JMenuItem("Save", new ImageIcon("images/save.gif"));
+	saveMenu.addActionListener(controller);
+	saveMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+	saveMenu.setActionCommand("Save Document");
+
+	JMenuItem saveAsMenu = new JMenuItem("Save as...", new ImageIcon("images/save_as.gif"));
+	saveAsMenu.addActionListener(controller);
+	saveAsMenu.setActionCommand("Save As Document");
+
+	JMenuItem pageSetupMenu = new JMenuItem("Page Setup...", new ImageIcon("images/options.gif"));
+
+	JMenuItem printMenu = new JMenuItem("Print", new ImageIcon("images/print.gif"));
+	printMenu.addActionListener(controller);
+	printMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+	printMenu.setActionCommand("Print Document");
+
+	JMenuItem exitMenu = new JMenuItem("Exit");
+
+	file.add(newMenu);
+	file.add(openMenu);
+	file.add(saveMenu);
+	file.add(saveAsMenu);
+	file.add(new JSeparator());
+	file.add(pageSetupMenu);
+	file.add(printMenu);
+	file.add(new JSeparator());
+	file.add(exitMenu);
+
+		// Edit
+	JMenuItem undoMenu = new JMenuItem("Undo", new ImageIcon("images/back.gif"));
+	undoMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+
+	JMenuItem cutMenu = new JMenuItem("Cut", new ImageIcon("images/cut.gif"));
+	cutMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+	cutMenu.addActionListener(controller);
+	cutMenu.setActionCommand("Cut");
+
+	JMenuItem copyMenu = new JMenuItem("Copy", new ImageIcon("images/copy.gif"));
+	copyMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+	copyMenu.addActionListener(controller);
+	copyMenu.setActionCommand("Copy");
+
+	JMenuItem pasteMenu = new JMenuItem("Paste", new ImageIcon("images/paste.gif"));
+	pasteMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+	pasteMenu.addActionListener(controller);
+	pasteMenu.setActionCommand("Paste");
+
+	JMenuItem deleteMenu = new JMenuItem("Delete", new ImageIcon("images/delete.gif"));
+	deleteMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+
+	JMenuItem findMenu = new JMenuItem("Find...", new ImageIcon("images/find.gif"));
+	findMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+
+	JMenuItem findeNextMenu = new JMenuItem("Find Next", new ImageIcon("images/find_next.gif"));
+	findeNextMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
+
+	JMenuItem replaceMenu = new JMenuItem("Replace...", new ImageIcon("images/replace.gif"));
+	replaceMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+
+	JMenuItem goToMenu = new JMenuItem("Go to...", new ImageIcon("images/go.gif"));
+	goToMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
+
+	JMenuItem selectAllMenu = new JMenuItem("Select All");
+	selectAllMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+
+	JMenuItem timeDateMenu = new JMenuItem("Time/Date", new ImageIcon("images/time.gif"));
+	timeDateMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+
+	edit.add(undoMenu);
+	edit.add(new JSeparator());
+	edit.add(cutMenu);	
+	edit.add(copyMenu);	
+	edit.add(pasteMenu);	
+	edit.add(deleteMenu);
+	edit.add(new JSeparator());	
+	edit.add(findMenu);	
+	edit.add(findeNextMenu);	
+	edit.add(replaceMenu);	
+	edit.add(goToMenu);
+	edit.add(new JSeparator());	
+	edit.add(selectAllMenu);	
+	edit.add(timeDateMenu);	
+
+		// Format
+	JMenuItem wordWrap = new JMenuItem("Word Wrap", new ImageIcon("images/word_wrap.gif"));
+	JMenuItem font = new JMenuItem("Font...", new ImageIcon("images/font.gif"));
+
+	format.add(wordWrap);						
+	format.add(font);
+
+		// View
+	JMenuItem statusBar = new JMenuItem("Status Bar");
+
+	view.add(statusBar);
+
+		// Help
+	JMenuItem viewHelp = new JMenuItem("View Help");
+	JMenuItem aboutNotepad = new JMenuItem("About Notepad");
+	aboutNotepad.addActionListener(controller);
+	aboutNotepad.setActionCommand("About Notepad");
+
+	help.add(viewHelp);
+	help.add(new JSeparator());	
+	help.add(aboutNotepad);
+
+	frame = new JFrame("Notepad by Kadyrbek Adiev");
+	frame.setSize(800, 600);
+	frame.setLayout(new BorderLayout());
+	frame.setLocation(300, 80);
+	frame.setJMenuBar(menuBar);
+	frame.add("Center", scroll);
+	
+	frame.setVisible(true);		
+    }
+
+    public String getTextFromTextArea() {
+	return textArea.getText();		
+    }
+
+    public void setTextToTextArea(String textFromFile){
+    	textArea.setText(textFromFile);
+    }
+
+    public void setTitle(String title) {
+    	frame.setTitle(title + " - Notepad");
+    }
+
+    public JTextArea getTextField() {
+    	return textArea;
+    }
+}
